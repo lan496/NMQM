@@ -27,7 +27,38 @@ def number_of_crossings(y):
     return ncross
 
 
-def numerov(xmax, mesh, nodes, n_iter):
+def outward_numerov(x, f, mesh, nodes, dx, icl):
+    """
+    outward integration in [0, icl]
+    """
+    y = np.zeros(mesh + 1)
+    # initial value
+    if nodes % 2 == 0:
+        y[0] = 1.  # arbitrary
+        y[1] = 0.5 * (12. - f[0] * 10.) * y[0] / f[1]  # eq(1.33)
+    else:
+        y[0] = 0.
+        y[1] = dx  # arbitrary
+    # outward integration
+    for i in range(1, icl):
+        y[i + 1] = ((12. - 10. * f[i]) * y[i] - f[i - 1] * y[i - 1]) / f[i + 1]  # eq (1.32)
+    return y
+
+
+def inward_numerov(y, f, mesh, dx, icl):
+    """
+    inward integration in [icl, mesh]
+    """
+    # initial values
+    y[mesh] = dx  # arbitrary
+    y[mesh - 1] = (12. - 10. * f[mesh]) * y[mesh] / f[mesh - 1]  # let y[mesh + 1] = 0
+    # inward integration
+    for i in range(mesh - 1, icl, -1):
+        y[i - 1] = ((12. - 10. * f[i]) * y[i] - f[i + 1] * y[i + 1]) / f[i - 1]
+    return y
+
+
+def solve1D(xmax, mesh, nodes, n_iter):
     """
     solve one-dimention Schrodinger equation with Numerov's method
 
@@ -48,7 +79,7 @@ def numerov(xmax, mesh, nodes, n_iter):
     for _ in range(n_iter):
         if eigval_ub - eigval_lb < 1e-10:
             break
-        f = 1. + dx * dx / 12. * (eigval - vpot)  # for Numerov method
+        f = 1. + dx * dx / 12. * 2. * (eigval - vpot)  # for Numerov method, eq (1.31)
 
         # search classical turning point
         icl = search_inversion_point(f)
@@ -57,17 +88,8 @@ def numerov(xmax, mesh, nodes, n_iter):
         elif icl < 1:
             raise ValueError("no classical turning point?")
 
-        y = np.zeros(mesh + 1)
-        # initial value
-        if nodes % 2 == 0:
-            y[0] = 1.  # arbitrary
-            y[1] = 0.5 * (12. - f[0] * 10.) * y[0] / f[1]  # eq(1.33)
-        else:
-            y[0] = 0.
-            y[1] = dx  # arbitrary
         # outward integration
-        for i in range(1, icl):
-            y[i + 1] = ((12. - 10. * f[i]) * y[i] - f[i - 1] * y[i - 1]) / f[i + 1]  # eq (1.32)
+        y = outward_numerov(x, f, mesh, nodes, dx, icl)
 
         # number of crossings
         ncross = number_of_crossings(y[:icl + 1])
@@ -76,21 +98,17 @@ def numerov(xmax, mesh, nodes, n_iter):
             # too many crossing points mean too high energy
             eigval_ub = eigval
         elif ncross < hnodes:
+            # too short crossing points mean too low energy
             eigval_lb = eigval
         else:
             # if number of crossing is correct, proceed to inward integration
 
-            # initial values
-            y[mesh] = dx  # arbitrary
-            y[mesh - 1] = (12. - 10. * f[mesh]) * y[mesh] / f[mesh - 1]  # let y[mesh + 1] = 0
             # inward integration
             y_icl_prev = y[icl]
-            for i in range(mesh - 1, icl, -1):
-                y[i - 1] = ((12. - 10. * f[i]) * y[i] - f[i + 1] * y[i + 1]) / f[i - 1]
+            y = inward_numerov(y, f, mesh, dx, icl)
 
             # rescale function to match at the classical turning point(icl)
             scaling = y_icl_prev / y[icl]
-            print(y)
             y[icl:] *= scaling
 
             # normalize wavefunction y on the [-xmax, xmax] segment
@@ -115,10 +133,10 @@ def numerov(xmax, mesh, nodes, n_iter):
 if __name__ == '__main__':
     xmax = 10.
     mesh = 100
-    nodes = 0
+    nodes = 4
     n_iter = 1000
 
-    x, y, eigval = numerov(xmax, mesh, nodes, n_iter)
+    x, y, eigval = solve1D(xmax, mesh, nodes, n_iter)
     import matplotlib.pyplot as plt
     plt.plot(x, y)
     plt.show()

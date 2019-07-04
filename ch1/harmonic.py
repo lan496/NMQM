@@ -118,7 +118,6 @@ def solve1D(xmax, mesh, nodes, n_iter):
 
             # check discontinuity in the first derivative, eq (1.37)
             jump = (y[icl + 1] + y[icl - 1] - (14. - 12. * f[icl]) * y[icl]) / dx
-            # TODO
             if jump * y[icl] > 0:
                 eigval_ub = eigval
             else:
@@ -133,11 +132,11 @@ def solve1D(xmax, mesh, nodes, n_iter):
 if __name__ == '__main__':
     xmax = 10.
     mesh = 100
-    nodes = 4
+    nodes = 2
     n_iter = 1000
 
     x, y, eigval = solve1D(xmax, mesh, nodes, n_iter)
     import matplotlib.pyplot as plt
     plt.plot(x, y)
-    plt.show()
-    print(eigval)
+    plt.title(f"Harmonic oscillator phi_{nodes}")
+    plt.savefig("ho.png")

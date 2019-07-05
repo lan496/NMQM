@@ -177,11 +177,14 @@ def number_of_crossings(y):
 
 if __name__ == '__main__':
     atomic_charge = 1
-    n = 1
+    n = 3
     l = 0
 
     sss = SphericalSchrodingerSolver(atomic_charge)
-    print(sss.solve(n, l))
+    for l in range(n):
+        energy = sss.solve(n, l)
+        print(f"n={n}, l={l}: {energy:.4f} Ry")
+
     """
     import matplotlib.pyplot as plt
     plt.plot(x, y)

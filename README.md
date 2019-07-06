@@ -7,3 +7,6 @@ numerov's method, combining forward and backward integration to avoid divergence
 
 ### Chapter 2: Three-dimensional Schrödinger equation
 logarithmic grid, estimating eigenvalue with perturbation theory
+
+### Chapter 4: The Variational Method
+plane wave expansion

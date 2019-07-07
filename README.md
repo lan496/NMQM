@@ -10,3 +10,6 @@ logarithmic grid, estimating eigenvalue with perturbation theory
 
 ### Chapter 4: The Variational Method
 plane wave expansion
+
+### Chapter 5: Non-orthonormal basis sets
+generalized eigenvalue problem, Slater-type orbital([STO](https://en.wikipedia.org/wiki/STO-nG_basis_sets))

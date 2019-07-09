@@ -13,3 +13,6 @@ plane wave expansion
 
 ### Chapter 5: Non-orthonormal basis sets
 generalized eigenvalue problem, Slater-type orbital([STO](https://en.wikipedia.org/wiki/STO-nG_basis_sets))
+
+### Chapter 6: Self-consistent Field
+Hartree method

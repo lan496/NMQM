@@ -84,14 +84,13 @@ class Hartree:
         return rho
 
     def _hartree_potential(self, rho, dx):
-        # TODO
         qe2 = 2.0
 
         # eq (6.21), (6.22)
-        charge = 4 * np.pi * dx * rho * (self.sss.r ** 3)
+        charge = np.cumsum(4 * np.pi * dx * rho * (self.sss.r ** 3))
         vhx = qe2 * charge / (self.sss.r ** 2)
 
-        tot_charge = np.sum(charge)
+        tot_charge = charge[-1]
         print(f"Total charge = {tot_charge}")
 
         vhx_shift = np.zeros_like(vhx)
@@ -99,14 +98,14 @@ class Hartree:
         for i in range(self.sss.mesh - 1, 0, -1):
             vhx_shift[i] = vhx_shift[i + 1] + vhx[i] * self.sss.r[i] * dx
 
-        ehx = np.sum(vhx * rho * (self.sss.r ** 3)) * 4 * np.pi * dx
+        ehx = np.sum(vhx_shift * rho * (self.sss.r ** 3)) * 4 * np.pi * dx
         ehx /= 2
 
         # TODO
         ehx *= 0.5
-        vhx = 0.5 * vhx
+        vhx_shift = 0.5 * vhx_shift
 
-        return ehx, vhx
+        return ehx, vhx_shift
 
 
 class SphericalSchrodingerSolver:
@@ -285,14 +284,9 @@ def number_of_crossings(y):
 
 
 if __name__ == '__main__':
-    atomic_charge = 1
-    n = 3
-    l = 0
-
-    sss = SphericalSchrodingerSolver(atomic_charge)
-    for l in range(n):
-        energy = sss.solve(n, l)
-        print(f"n={n}, l={l}: {energy:.4f} Ry")
+    atomic_charge = 2
+    hartree = Hartree(atomic_charge, 0.1, 1e-4)
+    print(hartree.solve())
 
     """
     import matplotlib.pyplot as plt

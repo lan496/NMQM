@@ -16,3 +16,7 @@ generalized eigenvalue problem, Slater-type orbital([STO](https://en.wikipedia.o
 
 ### Chapter 6: Self-consistent Field
 Hartree method
+
+### Chapter 7: Hartree-Fock approximation
+Rothaan-Hartree-Fock equations
+

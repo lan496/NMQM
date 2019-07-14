@@ -20,3 +20,5 @@ Hartree method
 ### Chapter 7: Hartree-Fock approximation
 Rothaan-Hartree-Fock equations
 
+### Chapter 9: Electrons in periodic potential
+FFT, Kronig-Penny model

@@ -22,3 +22,6 @@ Rothaan-Hartree-Fock equations
 
 ### Chapter 9: Electrons in periodic potential
 FFT, Kronig-Penny model
+
+### Chapter 10: Pseudopotential
+[Band Structures and Pseudopotential Form Factors for Fourteen Semiconductors of the Diamond and Zinc-blende Structures](https://journals.aps.org/pr/abstract/10.1103/PhysRev.141.789)

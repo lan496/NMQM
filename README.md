@@ -25,3 +25,6 @@ FFT, Kronig-Penny model
 
 ### Chapter 10: Pseudopotential
 [Band Structures and Pseudopotential Form Factors for Fourteen Semiconductors of the Diamond and Zinc-blende Structures](https://journals.aps.org/pr/abstract/10.1103/PhysRev.141.789)
+
+### Chapter 11: Exact diagonalization of quantum spin models
+Lanczos algorithm
